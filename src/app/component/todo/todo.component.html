@@ -1,44 +1,43 @@
-<header class=" p-2 bg-blue-300" >
+<header class=" p-2 bg-blue-300 w-auto" >
   <ul *ngIf="currentUser">
+    <li class=" p-2  font-medium font-sans ">
+      {{currentUser.displayName}}
+    </li>
     <li  class="p-2 mx-auto  font-medium font-sans">
-    {{currentUser.email}}
+      {{currentUser.email}}
     </li>
   </ul>
-  <button class="bg-red-500 p-2 text-medium text-white flex ml-auto -mt-10 rounded" (click)="logout()">Logout</button>
+    <button class="bg-red-500 p-2 text-medium text-white flex ml-auto -mt-12 rounded" (click)="logout()">Logout</button>
 </header>
 
 <div class=" mt-2 mx-auto">
-  <section class=" rounded-2xl p-2 text-gray-800 mx-auto w-96 font-serif">
+  <section class=" rounded-2xl p-2 text-gray-800 mx-auto  font-serif">
     <div class="container  mx-auto">
-        <div class="flex items-center">
-              <div  class=" font-bold mx-auto text-3xl text-black-300 px-5 py-2 rounded">To Do List</div>
-        </div>
+      <div class="flex items-center">
+        <div  class=" font-bold mx-auto text-3xl text-black-300 px-5 py-2 rounded">To Do List</div>
+      </div>
     </div>
   </section>
 
-
-
-<table class="mx-auto border rounded-2xl px-5 py-2 m-5 shadow">
-  <tr>
-    <th>
-      <div class="flex p-3 w-96">
-        <input type="text" placeholder="checklist" class="p-2 border-2 w-60  ml-16" #todo>
+<table class="mx-auto border rounded-2xl   shadow">
+  <tr> <th>
+      <div class="flex p-3 ">
+        <input type="text" placeholder=" checklist" class=" border-2 ml-16 " #todo>
         <button class="p-5 rounded bg-blue-400 font-medium text-white fa-solid fa-circle-plus fa-xl " (click)="onclick(todo)" >
         </button>
-    </div>
-    </th>
+      </div>
+      </th>
   </tr>
   <tr *ngFor="let item of todos" class="p-2">
     <td class="p-3">
       <i class="text-blue-500 p-5 list-disc" (click)="onStatusChange(item.id,!item.isDone)"
       [ngClass]="item.isDone? 'fa-solid fa-circle-check':'fa-regular fa-circle'"> </i>
-  {{item.title}}
-
+      {{item.title}}
     </td>
     <td>
       <span class="bg-red-500 rounded text-white p-2 m-3" (click)="onDelete(item.id)">
       <i class="fa-solid fa-trash-can p-2  "></i>
-    </span></td>
+      </span></td>
   </tr>
 </table>
 </div>

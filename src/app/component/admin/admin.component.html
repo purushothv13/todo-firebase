@@ -1,5 +1,31 @@
-<h1 class="p-2 mx-auto text-blue-400 font-bold font-serif">Welcome Admin</h1>
-<ul *ngIf= "currentUser">
-  <li>
-    <a routerLink="/list/{{currentUser.uid}}" >{{currentUser.email}}</a>
-    </li>
+<header class="bg-blue-300 h-auto" >
+  <div class="flex text-medium">
+    <h2 class="py-4 font-sans text-bold">
+      Welcome Admin
+    </h2>
+
+    <div class="font-serif flex mt-4 ml-auto" *ngIf="currentUser">
+      {{currentUser.email}}
+    </div>
+
+    <button class="bg-red-500 p-2 text-medium text-white flex ml-auto mt-2 mr-2 mb-2 rounded" (click)="logout()">Logout</button>
+  </div>
+
+</header>
+
+
+
+<div *ngIf="allUsers">
+<div *ngFor="let user of allUsers">
+  <div *ngIf="!user.isAdmin" class="p-2">
+
+    <div class=" font-serif" [routerLink]="['/list',user.uid]">
+      User : {{user.email}} {{user.gmail}}
+    </div>
+
+
+  </div>
+
+</div>
+</div>
+

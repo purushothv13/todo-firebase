@@ -4,58 +4,102 @@ import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument 
 import { Router } from '@angular/router';
 import Toast from 'awesome-toast-component';
 import { GoogleAuthProvider } from 'firebase/auth';
-import { getAuth, signInWithPopup } from "firebase/auth";
-import { first, Observable } from 'rxjs';
+import { first, firstValueFrom, Observable } from 'rxjs';
 import { todoUser } from '../interfaces/user';
-import { of, switchMap } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  currentUser:any;
-  firestoreCollection :AngularFirestoreCollection;
 
+  currentUser:any;
+  userCollection :AngularFirestoreCollection;
+
+  selectedUser:any;
   user:Observable<todoUser>;
+  isAdmin:boolean;
+  userId: any;
+  LoggedIn: any;
 
   constructor(private firestore:AngularFirestore , private auth:AngularFireAuth , private router:Router) {
 
-
-  this.firestoreCollection=firestore.collection('user');
+  this.userCollection=firestore.collection('users');
 
   this.currentUser= this.auth.authState.pipe(
     first()
   )
+};
 
 
 
-  }
+  //gets user from firebase for each id
 
+   getUser(userId){
+    return this.userCollection.doc(userId).get();
+   };
+
+   //gets email&pass from fsdb and login creats localstorage
    login (email:string,password:string){
-    this.auth.signInWithEmailAndPassword(email,password).then(()=>
+    this.auth.signInWithEmailAndPassword(email,password).then(async (res)=>
     {
       new Toast(`Login Successfull...!!!`, {
         position: 'top'});
 
       localStorage.setItem('token','true');
+
+    //converts observable to promise
+    //TODO : get user data from firebase
+    //check if user is admin
+    // isAdmin then navigate to amdin
+    //else navigate to todo
+
+      firstValueFrom( this.getUser(res.user.uid)).then((res)=>{
+
+
+        var userInfo=res.data();
+
+        if(userInfo['isAdmin']){
+
+          this.router.navigate(['/admin']);
+        }
+        else{
+          this.router.navigate(['/todo']);
+        }
+      })   });
+  };
+
+
+  //login using Gmail =>connects gmail with FSDB
+  googleSignIn(){
+    return this.auth.signInWithPopup(new GoogleAuthProvider).then(res=>
+    {
+      //Updates User Info with email
+      var updateUser:todoUser={  email:res.user.email,isAdmin:false,uid:res.user.uid};
+      this.updateUserData(updateUser);
+
+
+      new Toast(`Login Successfull with Gmail`, {
+        position: 'top'});
       this.router.navigate(['todo']);
-    })
-   }
+      //localStorage.setItem('token',JSON.stringify(res.user?.uid))
+    }),
+    err=>{
+      new Toast('Error with Google',{
+        position:'top'
+      });
+
+    }
+   };
+
 
    registerUser (email:string,password:string){
     this.auth.createUserWithEmailAndPassword(email,password).then((result)=>{
 
-
-console.log(result.user.uid);
-console.log(result.user);
-
 var newUser:todoUser={  email:email,isAdmin:false,uid:result.user.uid};
 
-this.updateUserData(newUser).then(()=>{
-  alert('user');
-  console.log('create a new user');
-})
+this.updateUserData(newUser);
 
 //TODO: Add User to Database after registration with firebase Auth
 
@@ -69,7 +113,7 @@ this.updateUserData(newUser).then(()=>{
         console.log();
       this.router.navigate(['register']);
     })
-   }
+   };
 
    logout(){
     this.auth.signOut().then(()=>{
@@ -83,28 +127,9 @@ this.updateUserData(newUser).then(()=>{
       new Toast(`Cannot Logout`, {
         position: 'top'});
     })
-   }
+   };
 
-   LoggedIn(){
-    return localStorage.getItem('token');
-   }
 
-   adminLoggedIn(){
-    return localStorage.getItem('token');
-   }
-
-   loginwithgmail(){
-    return this.auth.signInWithPopup(new GoogleAuthProvider).then(()=>
-    {
-
-      this.router.navigate(['todo'])
-    }),
-    err=>{
-      new Toast('Error with Google',{
-        position:'top'
-      });
-    }
-   }
 
    private updateUserData(user:todoUser){
     const userRef:AngularFirestoreDocument<any> = this.firestore.doc('users/'+user.uid);

@@ -1,0 +1,15 @@
+<header class="bg-blue-300 h-auto" >
+
+  <div class="flex items-start ...">
+
+    <h2 class="py-4">Welcome Admin</h2>
+
+  <button class="bg-red-500 p-2 text-medium text-white flex ml-auto mt-2 mr-2 rounded"  routerLink="/admin" >Back</button>
+</div>
+</header>
+
+
+  <div *ngFor="let i of todos" class=" flex p-2 mx-auto ">
+  <div class="text-blue-500 ">{{i.title}}</div>
+</div>
+

@@ -1,27 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { ApiService } from 'src/app/shared/api.service';
 import { AuthService } from 'src/app/shared/auth.service';
-import { todoUser } from 'src/app/interfaces/user';
+import { ApiService } from 'src/app/shared/api.service';
 
-@Component({
-  selector: 'app-admin',
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.css']
-})
+@Component({ templateUrl: 'admin.component.html' })
 export class AdminComponent implements OnInit {
 
-  todos:any;
   currentUser:any;
-  firestoreCollection :AngularFirestoreCollection;
+  allUsers:any;
 
-  constructor(private api:ApiService, private auth:AuthService,private firestore:AngularFirestore) {
+  constructor(private authService: AuthService ,private apiService:ApiService) {   }
 
-    this.firestoreCollection=firestore.collection('user');
-  }
+  ngOnInit() {
 
-  ngOnInit(): void {
+      this.apiService.getUsers().subscribe(users=>{
+        this.allUsers=users;
+      });
 
-  }
+      this.authService.currentUser.subscribe((result)=>{
+        this.currentUser=result;
+      });
+     }
 
-}
+     logout(){
+      return this.authService.logout();
+    };
+    }
+

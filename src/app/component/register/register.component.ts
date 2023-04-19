@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import Toast from 'awesome-toast-component';
-import { ApiService } from 'src/app/shared/api.service';
 import { AuthService } from 'src/app/shared/auth.service';
 
 @Component({
@@ -10,27 +9,23 @@ import { AuthService } from 'src/app/shared/auth.service';
 })
 export class RegisterComponent implements OnInit {
 
-  name:string='';
   email:string='';
   password:string='';
 
-  constructor(private api:ApiService,private auth:AuthService) { }
+  constructor(private auth:AuthService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   register(){
     if(this.email==''){
       new Toast(`Please Enter EmailID`, {
         position: 'top'});
-        return;
-    }
+        return;}
 
     if(this.password==''){
       new Toast(`Please Enter Password`, {
         position: 'top'});
-        return;
-    }
+        return;  }
 
     this.auth.registerUser(this.email,this.password);
 
