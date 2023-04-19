@@ -1,0 +1,23 @@
+<form class="text-medium mx-auto p-5 border-2 shadow w-96 m-36">
+
+  <h1 class="text-2xl font-serif p-4 ml-24">Register Here...!!!</h1>
+
+
+
+  <label for="email" class="font-medium p-2" >Email</label><br>
+  <input type="email" placeholder="Enter EmailID" class="font-medium p-2 border-b-2 w-72" name="email" [(ngModel)]="email">
+  <br>
+
+  <label for="password" class="font-medium p-2">Password</label><br>
+  <input type="password" placeholder="Enter Password (min.6 char)" class="font-medium p-2 border-b-2 w-72" name="password" [(ngModel)]="password">
+  <br>
+
+  <button type="button" class="bg-blue-400 p-2 rounded m-2 font-bold ml-36 px-4 py-2 text-white" (click)="register()"> Register</button>
+
+  <br>
+
+  <h3 routerLink="" class="ml-28 p-3"><i>Already User? Login...</i></h3>
+
+  <h6  class="ml-28 p-2 text-blue-500"><em>Forgotten Password?</em></h6>
+
+</form>

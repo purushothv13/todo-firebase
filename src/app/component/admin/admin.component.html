@@ -1,0 +1,5 @@
+<h1 class="p-2 mx-auto text-blue-400 font-bold font-serif">Welcome Admin</h1>
+<ul *ngIf= "currentUser">
+  <li>
+    <a routerLink="/list/{{currentUser.uid}}" >{{currentUser.email}}</a>
+    </li>
